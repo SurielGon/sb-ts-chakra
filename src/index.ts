@@ -1,1 +1,1 @@
-export * from './components/Test'
+import Input from "src/components/Input";

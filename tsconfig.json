@@ -4,6 +4,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "rootDir": "src",
+    "baseUrl": "./",
     
     /* Bundler mode */
     "moduleResolution": "Node",
@@ -25,7 +26,7 @@
   "exclude": [
     "node_modules",
     "build",
-    "src/**/*.stories.tsx",
-    "src/**/*.test.tsx"
+    "src/**/*.test.tsx",
+    "vite.config.ts"
   ]
 }
