@@ -1,7 +1,8 @@
-import { Text } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import Input from "src/components/Input";
+import Github from "./assets/github.svg";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Input> = {
@@ -33,26 +34,30 @@ export const WithLabel: Story = {
 };
 export const WithRightIcon: Story = {
   args: {
-    label: "oi",
-    rightElement: "I am in the Right!",
+    label: "Email",
+    placeholder: "Your Github email...",
+    rightElement: <Github />,
   },
 };
 export const WithLeftIcon: Story = {
   args: {
-    label: "oi",
-    leftElement: "I am in the Left!",
+    label: "Phone",
+    placeholder: "99999-9999",
+    leftElement: "+55",
   },
 };
 export const WithRightAndLeftIcon: Story = {
   args: {
     label: "oi",
-    rightElement: "Both!",
-    leftElement: "Both!",
+    leftElement: "A",
+    rightElement: "B",
   },
 };
 export const WithError: Story = {
   args: {
-    label: "oi",
+    label: "Age",
+    placeholder: "Your age",
+    error: "Your age is required!",
   },
 };
 export const WithMask: Story = {

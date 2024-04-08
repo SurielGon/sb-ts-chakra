@@ -6,21 +6,27 @@ import {
   InputProps as InputPropsChakra,
   InputRightElement,
 } from "@chakra-ui/react";
-import { ReactNode, isValidElement } from "react";
+import { ReactNode, useRef } from "react";
 
 interface InputProps extends InputPropsChakra {
   label?: ReactNode;
   rightElement?: ReactNode;
   leftElement?: ReactNode;
+  error?: string;
 }
 
 export default function Input(props: InputProps) {
   props = { ...props };
-
+  //const rightRef = useRef<HTMLDivElement>(null);
+  // const [t, sett] = useState<number>();
+  // useEffect(() => {
+  //   sett(rightRef.current?.clientWidth);
+  // }, [rightRef.current?.clientWidth]);
   const intern = {
     label: props.label,
     rightElement: props.rightElement,
     leftElement: props.leftElement,
+    error: props.error,
   };
   for (const key in intern) {
     delete props[key as keyof InputProps];
@@ -28,18 +34,25 @@ export default function Input(props: InputProps) {
   let component = <InputChakra {...props} />;
   if (intern.rightElement || intern.leftElement) {
     component = (
-      <InputGroup
-        maxW={"300px"}
-        position={"relative"}
-        display="inline-block"
-        paddingBottom="1.125em"
-      >
+      <InputGroup minW={"fit-content"} position={"relative"}>
         {intern.leftElement && (
-          <InputLeftElement>{intern.leftElement}</InputLeftElement>
+          <InputLeftElement
+            p="0.3rem"
+            minW={"var(--input-height)"}
+            width={"fit-content"}
+            height={"100%"}
+          >
+            {intern.leftElement}
+          </InputLeftElement>
         )}
         {component}
         {intern.rightElement && (
-          <InputRightElement id="setter">
+          <InputRightElement
+            p="0.3rem"
+            minW={"var(--input-height)"}
+            width={"fit-content"}
+            height={"100%"}
+          >
             {intern.rightElement}
           </InputRightElement>
         )}
