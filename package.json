@@ -32,6 +32,7 @@
     "@storybook/react-vite": "^8.0.5",
     "@storybook/test": "^8.0.5",
     "@types/react": "^18.2.74",
+    "@types/vanilla-masker": "^1.2.4",
     "react": "^18.2.0",
     "react-hook-form": "^7.51.2",
     "react-quill": "^2.0.0",
@@ -41,6 +42,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "storybook": "^8.0.5",
     "typescript": "^5.4.3",
+    "vanilla-masker": "^1.2.0",
     "vite": "^5.2.8",
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^4.3.2"
@@ -53,6 +55,7 @@
     "react-quill": "^2.0.0",
     "react-select": "^5.8.0",
     "typescript": "^5.4.3",
+    "vanilla-masker": "^1.2.0",
     "vite-plugin-svgr": "^4.2.0"
   }
 }

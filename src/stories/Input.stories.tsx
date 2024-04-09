@@ -1,8 +1,13 @@
-import { Button, Text } from "@chakra-ui/react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
 import Input from "src/components/Input";
 import Github from "./assets/github.svg";
+import Discord from "./assets/discord.svg";
+import Eye from "./assets/eye.svg";
+import EyeSlash from "./assets/eye-slash.svg";
+import { toPattern } from "vanilla-masker";
+import { FormProvider, useForm } from "react-hook-form";
+import { useState } from "react";
+import { Button, Flex, IconButton, Link } from "@chakra-ui/react";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Input> = {
@@ -14,12 +19,6 @@ const meta: Meta<typeof Input> = {
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: { onClick: fn() },
 };
 
 export default meta;
@@ -27,46 +26,136 @@ type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const WithLabel: Story = {
-  args: {
-    label: "Name",
-    placeholder: "Example: John Smith...",
+  name: "With Label and Placeholder",
+  render: () => {
+    return (
+      <Flex gap={4} direction="column">
+        <Input label="Name" placeholder="Example: John Smith..." />
+      </Flex>
+    );
   },
 };
-export const WithRightIcon: Story = {
-  args: {
-    label: "Email",
-    placeholder: "Your Github email...",
-    rightElement: <Github />,
+export const WithDateTime: Story = {
+  name: "With Date/Time",
+  render: () => {
+    return (
+      <Flex gap={4} direction="column">
+        <Input label="Birthday" type={"date"} />
+        <Input label="Next match" type={"datetime-local"} />
+      </Flex>
+    );
   },
 };
-export const WithLeftIcon: Story = {
+export const WithLeftElement: Story = {
   args: {
     label: "Phone",
     placeholder: "99999-9999",
     leftElement: "+55",
   },
+  name: "With Left Icon/Element",
 };
-export const WithRightAndLeftIcon: Story = {
-  args: {
-    label: "oi",
-    leftElement: "A",
-    rightElement: "B",
+export const WithRightElement: Story = {
+  name: "With Right Icon/Element",
+  render: () => {
+    const [isPassword, setIsPassword] = useState(true);
+    return (
+      <Flex gap={4} direction="column">
+        <Input
+          label="Email"
+          placeholder="Your Github email..."
+          rightElement={
+            <Link href="https://github.com/" isExternal>
+              <Github />
+            </Link>
+          }
+        />
+        <Input
+          label="Password"
+          type={isPassword ? "password" : "text"}
+          placeholder="Type your password"
+          rightElement={
+            <IconButton
+              aria-label=""
+              height={"100%"}
+              width={"100%"}
+              p={1}
+              minW={"fit-content"}
+              icon={isPassword ? <Eye /> : <EyeSlash />}
+              onClick={() => {
+                setIsPassword(!isPassword);
+              }}
+            />
+          }
+        />
+      </Flex>
+    );
   },
+};
+export const WithRightAndLeftElement: Story = {
+  args: {
+    label: "Nickname",
+    leftElement: <b>@</b>,
+    rightElement: (
+      <Link href="https://discord.com/" isExternal>
+        <Discord />
+      </Link>
+    ),
+  },
+  name: "With Left and Right Icon/Element",
 };
 export const WithError: Story = {
   args: {
     label: "Age",
+    type: "number",
+    isRequired: true,
     placeholder: "Your age",
-    error: "Your age is required!",
+    errorMessage: "Your age is required!",
   },
 };
 export const WithMask: Story = {
   args: {
-    label: "oi",
+    label: "CPF",
+    placeholder: "999.999.999.99",
+    mask: (value) => {
+      return toPattern(value || "", "999.999.999-99");
+    },
   },
 };
 export const WithMultipleMasks: Story = {
   args: {
-    label: "oi",
+    label: "CPF/CNPJ",
+    mask: (value) => {
+      if (value) {
+        if (value.replace(/\W/g, "").length < 12) {
+          return toPattern(value || "", "999.999.999-99");
+        } else {
+          return toPattern(value || "", "99.999.999/9999-99");
+        }
+      }
+      return value;
+    },
+  },
+  render: (args) => {
+    const [cpfCnpj, setCpfCnpj] = useState<string>("11.222.333/4444-44");
+    const form = useForm({ defaultValues: { cpfCnpj: "11222333444444" } });
+    return (
+      <Flex gap={4} direction="column">
+        <div>
+          Uncontrolled: {cpfCnpj}
+          <Input
+            {...args}
+            defaultValue={cpfCnpj}
+            maxLength={18}
+            onChange={(e) => setCpfCnpj(e.currentTarget.value)}
+          />
+        </div>
+        <div>
+          Controlled: {form.watch("cpfCnpj") as string}
+          <FormProvider {...form}>
+            <Input {...args} name="cpfCnpj" />
+          </FormProvider>
+        </div>
+      </Flex>
+    );
   },
 };

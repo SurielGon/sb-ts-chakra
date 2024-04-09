@@ -4,6 +4,7 @@ const preview: Preview = {
   parameters: {
     chakra: {
       theme: (theme) => {
+        theme.components.FormLabel.baseStyle.mb = 0;
         return theme;
       },
     },
