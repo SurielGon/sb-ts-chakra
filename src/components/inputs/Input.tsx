@@ -1,5 +1,5 @@
 import { Controller, useFormContext } from "react-hook-form";
-import BaseInput, { IBaseInputProps } from "./BaseInput";
+import BaseInput, { IBaseInputProps } from "src/components/inputs/BaseInput";
 import mergeHandler from "src/utils/mergeHandler";
 
 //const rightRef = useRef<HTMLDivElement>(null);

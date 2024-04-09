@@ -1,23 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Input from "src/components/Input";
-import Github from "./assets/github.svg";
-import Discord from "./assets/discord.svg";
-import Eye from "./assets/eye.svg";
-import EyeSlash from "./assets/eye-slash.svg";
+import Input from "src/components/inputs/Input";
+import Github from "src/stories/assets/github.svg";
+import Discord from "src/stories/assets/discord.svg";
+import Eye from "src/stories/assets/eye.svg";
+import EyeSlash from "src/stories/assets/eye-slash.svg";
 import { toPattern } from "vanilla-masker";
 import { FormProvider, useForm } from "react-hook-form";
 import { useState } from "react";
-import { Button, Flex, IconButton, Link } from "@chakra-ui/react";
+import { Flex, IconButton, Link } from "@chakra-ui/react";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Input> = {
   title: "Example/Input",
   component: Input,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
 };
 
