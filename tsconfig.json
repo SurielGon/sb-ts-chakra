@@ -5,7 +5,7 @@
     "skipLibCheck": true,
     "rootDir": "./",
     "baseUrl": "./",
-    
+
     /* Bundler mode */
     "moduleResolution": "Node",
     "esModuleInterop": true,
@@ -22,7 +22,7 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
   },
-  "include": ["src", "**/*.ts", "**/*.tsx"],
+  "include": ["src/**/*", "**/*.ts", "**/*.tsx"],
   "exclude": [
     "node_modules",
     "build",

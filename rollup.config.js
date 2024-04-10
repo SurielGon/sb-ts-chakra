@@ -10,11 +10,11 @@ export default [
   {
     input: "src/index.ts",
     output: [
-      // {
-      //   file: pkg.main,
-      //   format: "cjs",
-      //   sourcemap: true,
-      // },
+      {
+        file: pkg.main,
+        format: "cjs",
+        sourcemap: true,
+      },
       {
         file: pkg.module,
         format: "esm",
@@ -23,9 +23,9 @@ export default [
     ],
     plugins: [
       external(),
-      typescript({ tsconfig: "./tsconfig.json" }),
       commonjs(),
       resolve(),
+      typescript({ tsconfig: "./tsconfig.json" }),
     ],
   },
   {

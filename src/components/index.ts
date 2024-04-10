@@ -1,1 +1,1 @@
-export * from "src/components/inputs";
+export { Input, BaseInput, IBaseInputProps } from "./inputs";

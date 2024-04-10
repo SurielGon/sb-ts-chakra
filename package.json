@@ -5,10 +5,10 @@
   "type": "module",
   "main": "build/cjs/index.ts",
   "module": "build/esm/index.ts",
+  "types": "build/index.d.ts",
   "files": [
     "build"
   ],
-  "types": "build/index.d.ts",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
     "storybook": "storybook dev -p 6006",
