@@ -1,36 +1,36 @@
-import resolve from '@rollup/plugin-node-resolve';
-import external from 'rollup-plugin-peer-deps-external';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
-import { dts } from 'rollup-plugin-dts';
+import resolve from "@rollup/plugin-node-resolve";
+import external from "rollup-plugin-peer-deps-external";
+import commonjs from "@rollup/plugin-commonjs";
+import typescript from "@rollup/plugin-typescript";
+import { dts } from "rollup-plugin-dts";
 
-const pkg = require('./package.json');
+const pkg = require("./package.json");
 
 export default [
   {
-    input: 'src/index.ts',
+    input: "src/index.ts",
     output: [
       {
         file: pkg.main,
-        format: 'cjs',
-        sourcemap: true
+        format: "cjs",
+        sourcemap: true,
       },
       {
         file: pkg.module,
-        format: 'esm',
-        sourcemap: true
+        format: "esm",
+        sourcemap: true,
       },
     ],
     plugins: [
-      typescript({ tsconfig: './tsconfig.json' }),
+      external(),
       commonjs(),
       resolve(),
-      external(),
+      typescript({ tsconfig: "./tsconfig.json" }),
     ],
   },
   {
-    input: 'build/esm/index.d.ts',
-    output: [{ file: 'build/index.d.ts', format: 'esm' }],
+    input: "build/esm/src/index.d.ts",
+    output: [{ file: "build/index.d.ts", format: "esm" }],
     plugins: [dts()],
   },
 ];
