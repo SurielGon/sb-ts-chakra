@@ -7,8 +7,9 @@ import mergeHandler from "src/utils/mergeHandler";
 // useEffect(() => {
 //   sett(rightRef.current?.clientWidth);
 // }, [rightRef.current?.clientWidth]);
+export interface IInputProps extends IBaseInputProps{}
 
-export default function Input(props: IBaseInputProps) {
+export default function Input(props: IInputProps) {
   props = { ...props };
   const form = useFormContext();
   return form?.control && props.name ? (

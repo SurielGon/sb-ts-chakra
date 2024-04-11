@@ -16,7 +16,7 @@ const meta: Meta<typeof Input> = {
   parameters: {
     layout: "centered",
   },
-  tags: ["autodocs"],
+  tags: ["autodocs"]
 };
 
 export default meta;
@@ -25,10 +25,14 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const WithLabel: Story = {
   name: "With Label and Placeholder",
-  render: () => {
+  args: {
+    label: "Name",
+    placeholder: "Example: John Smith..." 
+  },
+  render: (args) => {
     return (
       <Flex gap={4} direction="column">
-        <Input label="Name" placeholder="Example: John Smith..." />
+        <Input {...args} />
       </Flex>
     );
   },
