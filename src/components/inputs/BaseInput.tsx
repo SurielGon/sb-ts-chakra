@@ -9,9 +9,6 @@ import {
   InputProps,
   InputLeftElement,
 } from "@chakra-ui/react";
-import mergeHandler from "src/utils/mergeHandler";
-
-type MaskFunction = (value?: string | null) => string | null | undefined;
 
 export interface IBaseInputProps extends InputProps {
   /**
@@ -30,10 +27,6 @@ export interface IBaseInputProps extends InputProps {
    * Will add the required symbol for the input
    */
   isRequired?: boolean;
-  /**
-   * A function to return the masked value, (currentValue)=>{ return maskedValue }
-   */
-  mask?: MaskFunction;
   /**
    * A custom element which will stay in the right side, the width is dependant on the input "size" prop, per chakraUI docs
    */
@@ -56,18 +49,12 @@ export default function BaseInput(props?: IBaseInputProps) {
     helperText: props?.helperText,
     errorMessage: props?.errorMessage,
     isRequired: props?.isRequired,
-    mask: props?.mask,
     rightElement: props?.rightElement,
-    leftElement: props?.leftElement,
+    leftElement: props?.leftElement
   };
   for (const key in intern) {
     delete props[key as keyof InputProps];
   }
-  props.onChange = mergeHandler(props.onChange, (e) => {
-    if (intern.mask) {
-      e.currentTarget.value = intern.mask(e.currentTarget.value) || "";
-    }
-  });
 
   let component = <ChakraInput {...props} />;
   if (intern.leftElement || intern.rightElement) {
@@ -105,21 +92,17 @@ export default function BaseInput(props?: IBaseInputProps) {
       </div>
     );
   }
-  if (intern.isRequired || intern.errorMessage || intern.helperText) {
-    component = (
-      <FormControl
-        isInvalid={Boolean(intern?.errorMessage)}
-        isRequired={intern.isRequired}
-      >
-        {component}
-        {intern?.errorMessage ? (
-          <FormErrorMessage>{intern?.errorMessage}</FormErrorMessage>
-        ) : intern.helperText ? (
-          <FormHelperText>{intern?.helperText}</FormHelperText>
-        ) : null}
-      </FormControl>
-    );
-  }
+  component = (
+    <FormControl
+      isInvalid={Boolean(intern?.errorMessage)}
+      isRequired={intern.isRequired}
+    >
+      {component}
+      {intern?.errorMessage ? (
+        <FormErrorMessage>{intern?.errorMessage}</FormErrorMessage>
+      ) : intern?.helperText ? <FormHelperText>{intern.helperText}</FormHelperText> : null}
+    </FormControl>
+  );
 
   return component;
 }

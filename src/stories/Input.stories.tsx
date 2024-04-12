@@ -7,7 +7,7 @@ import EyeSlash from "src/stories/assets/eye-slash.svg";
 import { toPattern } from "vanilla-masker";
 import { FormProvider, useForm } from "react-hook-form";
 import { useState } from "react";
-import { Flex, IconButton, Link } from "@chakra-ui/react";
+import { Divider, Flex, IconButton, Link, Text } from "@chakra-ui/react";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Input> = {
@@ -16,7 +16,7 @@ const meta: Meta<typeof Input> = {
   parameters: {
     layout: "centered",
   },
-  tags: ["autodocs"]
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -27,7 +27,7 @@ export const WithLabel: Story = {
   name: "With Label and Placeholder",
   args: {
     label: "Name",
-    placeholder: "Example: John Smith..." 
+    placeholder: "Example: John Smith...",
   },
   render: (args) => {
     return (
@@ -40,10 +40,24 @@ export const WithLabel: Story = {
 export const WithDateTime: Story = {
   name: "With Date/Time",
   render: () => {
+    const form = useForm();
     return (
-      <Flex gap={4} direction="column">
-        <Input label="Birthday" type={"date"} />
-        <Input label="Next match" type={"datetime-local"} />
+      <Flex gap={4} direction="row">
+        <Flex gap={4} direction="column">
+          <Text as="b">Uncontrolled</Text>
+          <Input label="Birthday" type={"date"} debug />
+          <Input label="Next match" type={"datetime-local"} debug />
+        </Flex>
+        <Flex>
+          <Divider orientation="vertical" />
+        </Flex>
+        <Flex gap={4} direction="column">
+          <Text as="b">Controlled</Text>
+          <FormProvider {...form}>
+            <Input label="Birthday" type={"date"} debug />
+            <Input label="Next match" type={"datetime-local"} debug />
+          </FormProvider>
+        </Flex>
       </Flex>
     );
   },
@@ -126,6 +140,7 @@ export const WithMask: Story = {
 export const WithMultipleMasks: Story = {
   args: {
     label: "CPF/CNPJ",
+    maxLength: 18,
     mask: (value) => {
       if (value) {
         if (value.replace(/\W/g, "").length < 12) {
@@ -138,25 +153,26 @@ export const WithMultipleMasks: Story = {
     },
   },
   render: (args) => {
-    const [cpfCnpj, setCpfCnpj] = useState<string>("11.222.333/4444-44");
     const form = useForm({ defaultValues: { cpfCnpj: "11222333444444" } });
     return (
-      <Flex gap={4} direction="column">
-        <div>
-          Uncontrolled: {cpfCnpj}
+      <Flex gap={4} direction="row">
+        <Flex gap={4} direction="column">
+          <Text as='b'>Uncontrolled</Text>
           <Input
             {...args}
-            defaultValue={cpfCnpj}
-            maxLength={18}
-            onChange={(e) => setCpfCnpj(e.currentTarget.value)}
+            defaultValue={"11.222.333/4444-44"}
+            debug
           />
-        </div>
-        <div>
-          Controlled: {form.watch("cpfCnpj") as string}
+        </Flex>
+        <Flex>
+          <Divider orientation="vertical"/>
+        </Flex>
+        <Flex gap={4} direction="column">
+        <Text as='b'>Controlled</Text>
           <FormProvider {...form}>
-            <Input {...args} name="cpfCnpj" />
+            <Input {...args} name="cpfCnpj" debug/>
           </FormProvider>
-        </div>
+        </Flex>
       </Flex>
     );
   },
