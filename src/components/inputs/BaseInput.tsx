@@ -9,9 +9,6 @@ import {
   InputProps,
   InputLeftElement,
 } from "@chakra-ui/react";
-import mergeHandler from "src/utils/mergeHandler";
-
-type MaskFunction = (value?: string | null) => string | null | undefined;
 
 export interface IBaseInputProps extends InputProps {
   /**
@@ -31,10 +28,6 @@ export interface IBaseInputProps extends InputProps {
    */
   isRequired?: boolean;
   /**
-   * A function to return the masked value, (currentValue)=>{ return maskedValue }
-   */
-  mask?: MaskFunction;
-  /**
    * A custom element which will stay in the right side, the width is dependant on the input "size" prop, per chakraUI docs
    */
   rightElement?: React.ReactNode;
@@ -44,82 +37,63 @@ export interface IBaseInputProps extends InputProps {
   leftElement?: React.ReactNode;
 }
 
-export default function BaseInput(props?: IBaseInputProps) {
-  props = { ...props };
+export default function BaseInput({ label, helperText, errorMessage, isRequired, rightElement, leftElement, ...props}: IBaseInputProps) {
+  props = { ...props } as InputProps;
   if (props.type === "date") {
     props.max = props.max || "9999-12-31";
   } else if (props.type === "datetime-local") {
     props.max = props.max || "9999-12-31T00:00";
   }
-  const intern = {
-    label: props?.label,
-    helperText: props?.helperText,
-    errorMessage: props?.errorMessage,
-    isRequired: props?.isRequired,
-    mask: props?.mask,
-    rightElement: props?.rightElement,
-    leftElement: props?.leftElement,
-  };
-  for (const key in intern) {
-    delete props[key as keyof InputProps];
-  }
-  props.onChange = mergeHandler(props.onChange, (e) => {
-    if (intern.mask) {
-      e.currentTarget.value = intern.mask(e.currentTarget.value) || "";
-    }
-  });
-
   let component = <ChakraInput {...props} />;
-  if (intern.leftElement || intern.rightElement) {
+  if (leftElement || rightElement) {
     component = (
       <InputGroup>
-        {intern.leftElement && (
+        {leftElement && (
           <InputLeftElement
             p="0.3rem"
             minW={"var(--input-height)"}
             maxW={"var(--input-height)"}
             height={"100%"}
           >
-            {intern.leftElement}
+            {leftElement}
           </InputLeftElement>
         )}
         {component}
-        {intern.rightElement && (
+        {rightElement && (
           <InputRightElement
             p="0.3rem"
             minW={"var(--input-height)"}
             maxW={"var(--input-height)"}
             height={"100%"}
           >
-            {intern.rightElement}
+            {rightElement}
           </InputRightElement>
         )}
       </InputGroup>
     );
   }
-  if (intern.label) {
+  if (label) {
     component = (
       <div>
-        <FormLabel>{intern.label}</FormLabel>
+        <FormLabel>{label}</FormLabel>
         {component}
       </div>
     );
   }
-  if (intern.isRequired || intern.errorMessage || intern.helperText) {
-    component = (
-      <FormControl
-        isInvalid={Boolean(intern?.errorMessage)}
-        isRequired={intern.isRequired}
-      >
-        {component}
-        {intern?.errorMessage ? (
-          <FormErrorMessage>{intern?.errorMessage}</FormErrorMessage>
-        ) : intern.helperText ? (
-          <FormHelperText>{intern?.helperText}</FormHelperText>
-        ) : null}
-      </FormControl>
-    );
-  }
+  component = (
+    <FormControl
+      isInvalid={Boolean(errorMessage)}
+      isRequired={isRequired}
+    >
+      {component}
+      {errorMessage && (
+        <FormErrorMessage>{errorMessage}</FormErrorMessage>
+      )}
+      {helperText && (
+        <FormHelperText>{helperText}</FormHelperText>
+      )}
+    </FormControl>
+  );
 
   return component;
 }
