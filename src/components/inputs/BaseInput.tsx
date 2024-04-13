@@ -37,70 +37,61 @@ export interface IBaseInputProps extends InputProps {
   leftElement?: React.ReactNode;
 }
 
-export default function BaseInput(props?: IBaseInputProps) {
-  props = { ...props };
+export default function BaseInput({ label, helperText, errorMessage, isRequired, rightElement, leftElement, ...props}: IBaseInputProps) {
+  props = { ...props } as InputProps;
   if (props.type === "date") {
     props.max = props.max || "9999-12-31";
   } else if (props.type === "datetime-local") {
     props.max = props.max || "9999-12-31T00:00";
   }
-  const intern = {
-    label: props?.label,
-    helperText: props?.helperText,
-    errorMessage: props?.errorMessage,
-    isRequired: props?.isRequired,
-    rightElement: props?.rightElement,
-    leftElement: props?.leftElement
-  };
-  for (const key in intern) {
-    delete props[key as keyof InputProps];
-  }
-
   let component = <ChakraInput {...props} />;
-  if (intern.leftElement || intern.rightElement) {
+  if (leftElement || rightElement) {
     component = (
       <InputGroup>
-        {intern.leftElement && (
+        {leftElement && (
           <InputLeftElement
             p="0.3rem"
             minW={"var(--input-height)"}
             maxW={"var(--input-height)"}
             height={"100%"}
           >
-            {intern.leftElement}
+            {leftElement}
           </InputLeftElement>
         )}
         {component}
-        {intern.rightElement && (
+        {rightElement && (
           <InputRightElement
             p="0.3rem"
             minW={"var(--input-height)"}
             maxW={"var(--input-height)"}
             height={"100%"}
           >
-            {intern.rightElement}
+            {rightElement}
           </InputRightElement>
         )}
       </InputGroup>
     );
   }
-  if (intern.label) {
+  if (label) {
     component = (
       <div>
-        <FormLabel>{intern.label}</FormLabel>
+        <FormLabel>{label}</FormLabel>
         {component}
       </div>
     );
   }
   component = (
     <FormControl
-      isInvalid={Boolean(intern?.errorMessage)}
-      isRequired={intern.isRequired}
+      isInvalid={Boolean(errorMessage)}
+      isRequired={isRequired}
     >
       {component}
-      {intern?.errorMessage ? (
-        <FormErrorMessage>{intern?.errorMessage}</FormErrorMessage>
-      ) : intern?.helperText ? <FormHelperText>{intern.helperText}</FormHelperText> : null}
+      {errorMessage && (
+        <FormErrorMessage>{errorMessage}</FormErrorMessage>
+      )}
+      {helperText && (
+        <FormHelperText>{helperText}</FormHelperText>
+      )}
     </FormControl>
   );
 

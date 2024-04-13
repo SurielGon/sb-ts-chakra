@@ -9,7 +9,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useState } from "react";
 import { Divider, Flex, IconButton, Link, Text } from "@chakra-ui/react";
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Input> = {
   title: "Example/Input",
   component: Input,
@@ -22,7 +21,6 @@ const meta: Meta<typeof Input> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const WithLabel: Story = {
   name: "With Label and Placeholder",
   args: {
@@ -32,13 +30,13 @@ export const WithLabel: Story = {
   render: (args) => {
     return (
       <Flex gap={4} direction="column">
-        <Input {...args} />
+        <Input {...args} debug/>
       </Flex>
     );
   },
 };
-export const WithDateTime: Story = {
-  name: "With Date/Time",
+export const DateTime: Story = {
+  name: "Date/Time",
   render: () => {
     const form = useForm();
     return (
@@ -62,16 +60,41 @@ export const WithDateTime: Story = {
     );
   },
 };
-export const WithLeftElement: Story = {
+export const LeftElement: Story = {
   args: {
     label: "Phone",
+    maxLength: 10,
     placeholder: "99999-9999",
-    leftElement: "+55",
+    leftElement: '+55',
+    defaultValue: '936699635',
+    mask: (value) => {
+      return toPattern(value || "", "99999-9999");
+    },
   },
-  name: "With Left Icon/Element",
+  name: "Left Icon/Element",
+  render: (args) => {
+    const form = useForm()
+    return (
+      <Flex gap={4} direction="row">
+        <Flex gap={4} direction="column">
+          <Text as="b">Uncontrolled</Text>
+          <Input {...args} debug/>
+        </Flex>
+        <Flex>
+          <Divider orientation="vertical" />
+        </Flex>
+        <Flex gap={4} direction="column">
+          <Text as="b">Controlled</Text>
+          <FormProvider {...form}>
+            <Input {...args} debug />
+          </FormProvider>
+        </Flex>
+      </Flex>
+    );
+  },
 };
-export const WithRightElement: Story = {
-  name: "With Right Icon/Element",
+export const RightElement: Story = {
+  name: "Right Icon/Element",
   render: () => {
     const [isPassword, setIsPassword] = useState(true);
     return (
@@ -84,6 +107,7 @@ export const WithRightElement: Story = {
               <Github />
             </Link>
           }
+          debug
         />
         <Input
           label="Password"
@@ -102,12 +126,13 @@ export const WithRightElement: Story = {
               }}
             />
           }
+          debug
         />
       </Flex>
     );
   },
 };
-export const WithRightAndLeftElement: Story = {
+export const RightAndLeftElement: Story = {
   args: {
     label: "Nickname",
     leftElement: <b>@</b>,
@@ -117,7 +142,23 @@ export const WithRightAndLeftElement: Story = {
       </Link>
     ),
   },
-  name: "With Left and Right Icon/Element",
+  name: "Left and Right Icon/Element",
+};
+export const WithLoading: Story = {
+  args: {
+    label: "Choose your username",
+    defaultValue: 'TheAmazingMeerkat',
+    isLoading: true,
+    isDisabled: true,
+    helperText: 'Checking availability...'
+  },
+  name: "Is Loading",
+  render: (args)=>{
+    return (<Flex gap={4} direction="column">
+      <Input {...args} />
+      <Input {...args} isLoadingPosition="left"/>
+    </Flex>)
+  }
 };
 export const WithError: Story = {
   args: {
@@ -126,12 +167,14 @@ export const WithError: Story = {
     isRequired: true,
     placeholder: "Your age",
     errorMessage: "Your age is required!",
+    debug: true,
   },
 };
 export const WithMask: Story = {
   args: {
     label: "CPF",
     placeholder: "999.999.999.99",
+    debug: true,
     mask: (value) => {
       return toPattern(value || "", "999.999.999-99");
     },
@@ -157,20 +200,16 @@ export const WithMultipleMasks: Story = {
     return (
       <Flex gap={4} direction="row">
         <Flex gap={4} direction="column">
-          <Text as='b'>Uncontrolled</Text>
-          <Input
-            {...args}
-            defaultValue={"11.222.333/4444-44"}
-            debug
-          />
+          <Text as="b">Uncontrolled</Text>
+          <Input {...args} defaultValue={"11222333444444"} debug />
         </Flex>
         <Flex>
-          <Divider orientation="vertical"/>
+          <Divider orientation="vertical" />
         </Flex>
         <Flex gap={4} direction="column">
-        <Text as='b'>Controlled</Text>
+          <Text as="b">Controlled</Text>
           <FormProvider {...form}>
-            <Input {...args} name="cpfCnpj" debug/>
+            <Input {...args} name="cpfCnpj" debug />
           </FormProvider>
         </Flex>
       </Flex>
